@@ -15,8 +15,9 @@ public final class Cell {
         {1, 5, 6, 3}, // left
         {3, 6, 5, 1}  // right
     };
-    static Cell origin = new Cell(new int[]{0, 3, 6, 9, 12, 15, 18});
-    public static List<Queue<Cell>> cellLevels = new ArrayList<>();
+    public static final Cell origin = new Cell(new int[]{0, 3, 6, 9, 12, 15, 18});
+    public static final List<Queue<Cell>> cellLevels = new ArrayList<>();
+    public int depth = 0; // Track depth in the search tree
     static {
         int[] newCoord, rotation, oneArray;
         int index;
@@ -57,7 +58,7 @@ public final class Cell {
     }
     protected final int[] coord;
     public final Cell[] neighbors = new Cell[6];
-    Cell prev; // previous cell in path
+    Cell prev = null; // previous cell in path
     int g = 0; // Distance from start/target node to current node
     
     protected Cell(int[] coord) {

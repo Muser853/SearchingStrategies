@@ -6,9 +6,12 @@ public final class ASearch extends AbstractSearch {
     public ASearch(Boolean euclidean, boolean bidirectional){
         super(bidirectional);
 
-        this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell -> Math.abs(cell.g) + cell.calculateHeuristics(
-                euclidean, cell.g < 0 ? target : start))) : new Heap<>(Comparator.comparingInt(cell ->
-                Math.abs(cell.g) + target.calculateHeuristics(euclidean, cell)));
+        this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell -> cell.calculateHeuristics(
+                euclidean, cell.g < 0 ? target : start)
+        + Math.abs(cell.g)
+        )) : new Heap<>(Comparator.comparingInt(cell -> target.calculateHeuristics(euclidean, cell)
+        + Math.abs(cell.g)
+        ));
     }
     @Override
     void addCell(Cell next){

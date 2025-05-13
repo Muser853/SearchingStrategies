@@ -1,5 +1,6 @@
 public final class IterativeDeepeningDepthFirstSearch extends AbstractSearch {
     private final LinkedList<Cell> stack;
+    private int currentDepth;
     
     public IterativeDeepeningDepthFirstSearch(boolean bidirectional){
         super(bidirectional);
@@ -8,42 +9,31 @@ public final class IterativeDeepeningDepthFirstSearch extends AbstractSearch {
     void reset(){
         for(Cell cell : stack) cell.reset();
         stack.clear();
+        currentDepth = 0;
     }
     void updateCell(Cell next){
-    }
-    void addCell(Cell next){
+        // Update the cell with depth information
+        next.depth = currentDepth + 1;
         stack.addFirst(next);
     }
-    Cell findNextCell(){
-        return stack.isEmpty() ? null : stack.remove();
+    void addCell(Cell next){
+        // Initialize depth for new cells
+        next.depth = currentDepth + 1;
+        stack.addFirst(next);
     }
+    
+    Cell findNextCell(){
+        if (stack.isEmpty()) {
+            // If stack is empty, restart search from root
+            currentDepth = 0;
+            return null;
+        }
+        cur = stack.remove();
+        currentDepth = cur.depth;
+        return cur;
+    }
+    
     int numRemainingCells(){
         return stack.size();
-    }
-    boolean depthLimitedSearch(Cell current, int depthLimit) {
-        stack.clear();
-        stack.addFirst(current);
-        
-        while (!stack.isEmpty()){
-            cur = stack.remove();
-            
-            if (cur.g < depthLimit){
-                for (Cell neighbor : cur.neighbors){
-                    if (neighbor.prev == null){
-                        neighbor.prev = cur;
-                        neighbor.g = cur.g + 1;
-                        stack.addFirst(neighbor);
-                        explored.addFirst(neighbor);
-                    }
-                    else if (Integer.signum(neighbor.g) != Integer.signum(cur.g)){
-                        return true;
-                    }
-                    else if (cur.g + 1 < neighbor.g) {
-                        neighbor.prev = cur;
-                        updateCell(neighbor);
-                    }
-                }
-            }
-        }return false;
     }
 }

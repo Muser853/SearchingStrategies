@@ -1,9 +1,10 @@
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.util.Iterator;
-@SuppressWarnings("unchecked")
-public class HashSet<T> implements Iterable<T> {
 
+@SuppressWarnings("unchecked")
+
+public class HashSet<T> implements Iterable<T> {
     private ArrayDeque<T>[] hashTable;
     private int size;
     //private final double loadFactor;
@@ -22,7 +23,7 @@ public class HashSet<T> implements Iterable<T> {
     // private void resize(int newCapacity) {
     //     Iterator<T> iterator = iterator();
     //     hashTable = (ArrayDeque<T>[]) new ArrayDeque[newCapacity];
-    //     while (iterator.hasNext()) // note: iterator.next() returns null only when iterator.hasNext() is false
+    //     while (iterator.hasNext())
     //         addToBucket(iterator.next());
     // }
     public boolean contains(T item) {return hashTable[hash(item)] != null && hashTable[hash(item)].contains(item);}
@@ -99,8 +100,7 @@ public class HashSet<T> implements Iterable<T> {
         sb.append("HashTable capacity: ").append(hashTable.length).append("\n");
         for (int i = 0; i < hashTable.length; i++) {
             sb.append("index ").append(i).append(": ");
-            if (hashTable[i] != null)
-                sb.append(hashTable[i].toString());
+            if (hashTable[i] != null) sb.append(hashTable[i].toString());
             sb.append("\n");
         }
         return sb.delete(sb.length() - 1, sb.length()).toString(); // removes the last "\n" newline

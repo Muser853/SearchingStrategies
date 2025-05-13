@@ -1,6 +1,6 @@
 import java.util.Comparator;
 
-public final class RecursiveIDASearch extends AbstractMazeSearch{
+public final class RecursiveIDASearch extends AbstractSearch{
     private final PriorityQueue<Cell> heap;
     public RecursiveIDASearch(Boolean euclidean, boolean bidirectional){
         super(bidirectional);
@@ -8,8 +8,13 @@ public final class RecursiveIDASearch extends AbstractMazeSearch{
         + (cur.prev == null ? 0 : cur.prev.g + 1)
         )) : new Heap<>(Comparator.comparingInt(cell ->target.calculateHeuristics(euclidean, cell)));
     }
+    void reset(){
+        heap.clear();
+    }
     @Override
-    int numRemainingCells(){return heap.size();}
+    int numRemainingCells(){
+        return heap.size();
+    }
     @Override
     Cell findNextCell(){return heap.poll();}
     @Override

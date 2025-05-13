@@ -1,42 +1,29 @@
 import java.util.Comparator;
 
-public class BeamSearch extends AbstractMazeSearch{
+public class BeamSearch extends AbstractSearch{
     private final PriorityQueue<Cell> heap;
 
     public BeamSearch(Boolean euclidean, boolean bidirectional){
         super(bidirectional);
-        this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell ->
-            cell.calculateHeuristics(
-                euclidean, (cell.forwardVisited
-                ? target : start))
-                : new Heap<>(Comparator.comparingInt(cell ->
-                target.calculateHeuristics(
-                        euclidean, cell))
-        ))), true);
+
+        this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell -> cell.calculateHeuristics(
+                euclidean, cell.g < 0 ? target : start))) : new Heap<>(Comparator.comparingInt(cell ->
+                target.calculateHeuristics(euclidean, cell)));
     }
-    void reset() {
-        super.reset();
+    public void reset(){
+        for (Cell cell : heap) cell.reset();
         heap.clear();
     }
-    @Override
-    void addCell(Cell next) {
-        exploredCells.add(next);
+    public void addCell(Cell next){
         heap.offer(next);
     }
-    @Override
-    void updateCell(Cell next) {
+    public void updateCell(Cell next) {
         heap.updatePriority(next);
     }
-    @Override
-    int numRemainingCells() {
+    public int numRemainingCells() {
         return heap.size();
     }
-    @Override
-    Cell findNextCell() {
+    public Cell findNextCell() {
         return heap.isEmpty() ? null : heap.poll();
-    }
-    @Override
-    boolean updatePath(Cell neighbor) {
-        return false;
     }
 }

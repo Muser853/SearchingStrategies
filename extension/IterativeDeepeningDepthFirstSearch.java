@@ -1,30 +1,41 @@
-import java.util.ArrayDeque;
-
-public final class IterativeDeepeningDepthFirstSearch extends IterativeDeepeningSearch {
-    private final ArrayDeque<Cell> stack;
+public final class IterativeDeepeningDepthFirstSearch extends AbstractSearch {
+    private final LinkedList<Cell> stack;
     
     public IterativeDeepeningDepthFirstSearch(boolean bidirectional){
         super(bidirectional);
-        this.stack = new ArrayDeque<>();
+        this.stack = new LinkedList<>();
+    }
+    void reset(){
+        for(Cell cell : stack) cell.reset();
+        stack.clear();
+    }
+    void updateCell(Cell next){
+    }
+    void addCell(Cell next){
+        stack.addFirst(next);
+    }
+    Cell findNextCell(){
+        return stack.isEmpty() ? null : stack.remove();
+    }
+    int numRemainingCells(){
+        return stack.size();
     }
     boolean depthLimitedSearch(Cell current, int depthLimit) {
         stack.clear();
-        stack.push(current);
-        exploredCells.add(current);
+        stack.addFirst(current);
         
-        while (!stack.isEmpty()) {
-            cur = stack.pop();
+        while (!stack.isEmpty()){
+            cur = stack.remove();
             
-            if (cur.g < depthLimit) {
-                for (Cell neighbor : cur.neighbors) {
-                    if (neighbor.forwardVisited == null){
-                        neighbor.forwardVisited = cur.forwardVisited;
+            if (cur.g < depthLimit){
+                for (Cell neighbor : cur.neighbors){
+                    if (neighbor.prev == null){
                         neighbor.prev = cur;
                         neighbor.g = cur.g + 1;
-                        stack.push(neighbor);
-                        exploredCells.add(neighbor);
+                        stack.addFirst(neighbor);
+                        explored.addFirst(neighbor);
                     }
-                    else if (neighbor.forwardVisited != cur.forwardVisited){
+                    else if (Integer.signum(neighbor.g) != Integer.signum(cur.g)){
                         return true;
                     }
                     else if (cur.g + 1 < neighbor.g) {
@@ -34,17 +45,5 @@ public final class IterativeDeepeningDepthFirstSearch extends IterativeDeepening
                 }
             }
         }return false;
-    }
-    @Override
-    public ArrayDeque<Cell> search(Cell start, Cell target) {
-        start.reset();
-        this.start = start;
-        this.target = target;
-        
-        for (int depthLimit = 0; depthLimit < 256; depthLimit++) {
-            if (depthLimitedSearch(start, depthLimit)) {
-                return traceback(target);
-            }
-        }return null;
     }
 }

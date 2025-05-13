@@ -1,47 +1,39 @@
 import java.util.Comparator;
 
-public final class RecursiveASearch extends AbstractMazeSearch {
+public final class RecursiveASearch extends AbstractSearch {
     private final PriorityQueue<Cell> heap;
 
     public RecursiveASearch(Boolean euclidean, boolean bidirectional) {
         super(bidirectional);
-        this.heap = new Heap<>(Comparator.comparingInt(cell ->target.calculateHeuristics(euclidean, cell)
-        + (cur.prev == null ? 0 : cur.prev.g + 1)
-        ));
+
+        this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell -> Math.abs(cell.g) + cell.calculateHeuristics(
+                euclidean, cell.g < 0 ? target : start))) : new Heap<>(Comparator.comparingInt(cell ->
+                Math.abs(cell.g) + target.calculateHeuristics(euclidean, cell)));
     }
     @Override
-    void reset() {
-        super.reset();
+    void reset(){
+        for (Cell cell: heap) cell.reset();
         heap.clear();
     }
     @Override
     void addCell(Cell next) {
-        exploredCells.add(next);
         heap.offer(next);
-    }
 
+        if (next != start && next != target){
+            if (next.prev == start) search(next, target);
+            else if (next.prev == target) search(start, next);
+        }
+    }
     @Override
-    void updateCell(Cell next) {
+    void updateCell(Cell next){
         heap.updatePriority(next);
     }
-
     @Override
-    int numRemainingCells() {
+    int numRemainingCells(){
         return heap.size();
     }
-
     @Override
-    Cell findNextCell() {
+    Cell findNextCell(){
         return heap.isEmpty() ? null : heap.poll();
-    }
-
-    @Override
-    boolean updatePath(Cell neighbor) {
-        if ((cur.prev == null ? 1 : cur.prev.g + 2) < neighbor.g) {
-            neighbor.prev = cur;
-            neighbor.g = cur.g + 1;
-            return true;
-        }
-        return false;
     }
 }

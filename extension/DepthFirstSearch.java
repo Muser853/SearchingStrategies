@@ -1,15 +1,18 @@
 import java.util.ArrayDeque;
 
-public final class MazeDepthFirstSearch extends AbstractMazeSearch {
+public final class DepthFirstSearch extends AbstractSearch {
     private final ArrayDeque<Cell> stack;
 
-    public MazeDepthFirstSearch(boolean bidirectional) {
+    public DepthFirstSearch(boolean bidirectional) {
         super(bidirectional);
         this.stack = new ArrayDeque<>();
     }
+    void reset(){
+        for (Cell cell : stack) cell.reset();
+        stack.clear();
+    }
     @Override
     void addCell(Cell next) {
-        exploredCells.add(next);
         stack.push(next);
     }
     @Override
@@ -18,9 +21,4 @@ public final class MazeDepthFirstSearch extends AbstractMazeSearch {
     int numRemainingCells() {return stack.size();}
     @Override
     Cell findNextCell() {return stack.isEmpty() ? null : stack.pop();}
-
-    @Override
-    boolean updatePath(Cell neighbor) {
-        return false;
-    }
 }

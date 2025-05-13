@@ -1,67 +1,33 @@
 import java.util.Comparator;
 
-public final class ASearch extends AbstractMazeSearch {
-    private final PriorityQueue<Cell> openSet;
+public final class ASearch extends AbstractSearch {
+    private final PriorityQueue<Cell> heap;
 
-    public ASearch(Boolean euclidean, boolean bidirectional) {
+    public ASearch(Boolean euclidean, boolean bidirectional){
         super(bidirectional);
 
-        this.openSet = new Heap<>(Comparator.comparingInt(
-            cell -> Math.min(
-                cell.g  + cell.calculateHeuristics(euclidean, target),
-                Integer.MAX_VALUE)
-            ));
-    }
-
-    @Override
-    void addCell(Cell next) {
-        next.g = cur.g + 1;
-        openSet.offer(next);
-        exploredCells.add(next);
+        this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell -> Math.abs(cell.g) + cell.calculateHeuristics(
+                euclidean, cell.g < 0 ? target : start))) : new Heap<>(Comparator.comparingInt(cell ->
+                Math.abs(cell.g) + target.calculateHeuristics(euclidean, cell)));
     }
     @Override
-    void updateCell(Cell next) {
-        openSet.updatePriority(next);
-    }
-
-    @Override
-    int numRemainingCells() {
-        return openSet.size();
-    }
-
-    @Override
-    Cell findNextCell() {
-        if (openSet.isEmpty()) return null;
-
-        cur = openSet.poll();
-
-        for (Cell neighbor : cur.neighbors) {
-            if (neighbor.prev == null) {
-                neighbor.prev = cur;
-                if (cur.g + 1 < neighbor.g) {
-                    neighbor.g = cur.g + 1;
-                    addCell(neighbor);
-                }
-            }
-            else if (cur.g + 1 < neighbor.g) {
-                neighbor.prev = cur;
-                updateCell(neighbor);
-            }
-        }return cur;
+    void addCell(Cell next){
+        heap.offer(next);
     }
     @Override
+    void updateCell(Cell next){
+        heap.updatePriority(next);
+    }
+    @Override
+    int numRemainingCells(){
+        return heap.size();
+    }
+    @Override
+    Cell findNextCell(){
+        return heap.isEmpty() ? null : heap.poll();
+    }
     void reset(){
-        super.reset();
-        openSet.clear();
-    }
-
-    @Override
-    boolean updatePath(Cell neighbor) {
-        if (cur.g + 1 < neighbor.g) {
-            neighbor.prev = cur;
-            neighbor.g = cur.g + 1;
-            return true;
-        }
-        return false;
+        for (Cell cell : heap) cell.reset();
+        heap.clear();
     }
 }

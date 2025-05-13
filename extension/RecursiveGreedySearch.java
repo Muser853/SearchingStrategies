@@ -1,53 +1,33 @@
 import java.util.Comparator;
 
-public final class RecursiveGreedySearch extends AbstractMazeSearch {
-    private final PriorityQueue<Cell> priorityQueue;
+public final class RecursiveGreedySearch extends AbstractSearch {
+    private final PriorityQueue<Cell> heap;
 
-    public RecursiveGreedySearch(Boolean euclidean, boolean bidirectional) {
+    public RecursiveGreedySearch(Boolean euclidean, boolean bidirectional){
         super(bidirectional);
-        this.priorityQueue = new Heap<>(Comparator.comparingInt(cell ->
-        target.calculateHeuristics(euclidean, cell)));
+        this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell -> cell.calculateHeuristics(
+                euclidean, cell.g < 0 ? target : start))) : new Heap<>(Comparator.comparingInt(cell ->
+                target.calculateHeuristics(euclidean, cell)));
     }
-    @Override
-    public void addCell(Cell next){}
-    @Override
-    public boolean updatePath(Cell neighbor){return false;}
-    @Override
-    public void updateCell(Cell next) {priorityQueue.updatePriority(next);}
-    @Override
-    public int numRemainingCells() {return priorityQueue.size();}
-    @Override
-    public Cell findNextCell() {return null;}
+    void reset(){
+        for(Cell cell : heap) cell.reset();
+        heap.clear();
+    }
+    public void addCell(Cell next){
+        heap.offer(next);
 
-    private boolean recursiveGreedySearch(int depth) {
-        if (depth <= 0 || priorityQueue.isEmpty()) {
-            return false;
+        if(next != start && next != target){
+            if (next.prev == start) search(next, target);
+            else if (next.prev == target) search(start, next);
         }
-        cur = priorityQueue.poll();
-        addCell(cur);
-        if (cur.equals(target)) {
-            return true;
-        }
-        // Add unvisited neighbors to priority queue
-        for (Cell neighbor : cur.neighbors) {
-            if (neighbor.prev == null) {
-                neighbor.prev = cur;
-                priorityQueue.offer(neighbor);
-            }
-            else if (cur.g +1 < neighbor.g){
-                neighbor.prev = cur;
-                updateCell(neighbor);
-            }
-            if(neighbor.forwardVisited != cur.forwardVisited){
-                return true;
-            }
-        }return recursiveGreedySearch(depth - 1);
-    }// priorityQueue.offer(start);
-    // if (bidirectional) priorityQueue.offer(target);
-    // boolean found = false;
-    // // Iterative deepening greedy search
-    // for (int depth = 0; !found && !priorityQueue.isEmpty()&& depth < 256; depth++) {
-    //     found = recursiveGreedySearch(depth);
-    // }
-    // return found ? traceback(target) : null;
+    }
+    public void updateCell(Cell next){
+        heap.updatePriority(next);
+    }
+    public int numRemainingCells(){
+        return heap.size();
+    }
+    public Cell findNextCell(){
+        return heap.isEmpty() ? null : heap.poll();
+    }
 }

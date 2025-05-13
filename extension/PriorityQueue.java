@@ -1,4 +1,6 @@
-interface PriorityQueue<T> {
+import java.lang.Iterable;
+
+interface PriorityQueue<T> extends Iterable<T>{
     T peek();
     T poll();
     void offer(T item);

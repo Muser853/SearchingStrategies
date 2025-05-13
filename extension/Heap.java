@@ -1,10 +1,11 @@
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Heap<T> implements PriorityQueue<T> {
+public class Heap<T> implements PriorityQueue<T>{
     private int size;
     private final boolean maxHeap;
     public final Comparator<T> comparator;
@@ -17,6 +18,10 @@ public class Heap<T> implements PriorityQueue<T> {
         this.heap = new ArrayList<>(1<<22);
         this.indexMap = new HashMap<>();
         this.size = 0;
+    }
+    @Override
+    public Iterator<T> iterator() {
+        return heap.iterator();
     }
     public Heap(Comparator<T> comparator){this(comparator, false);}
     public int compareTo(T a, T b) {return maxHeap ? comparator.compare(b, a) : comparator.compare(a, b);}
@@ -93,7 +98,6 @@ public class Heap<T> implements PriorityQueue<T> {
             bubbleDown(index);
         }
     }
-    @Override
     public boolean contains(T item) {
         return indexMap.containsKey(item);
     }

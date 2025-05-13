@@ -1,59 +1,32 @@
-import java.util.ArrayDeque;
+import java.util.LinkedList;
 
-final class RecursiveDFS extends AbstractMazeSearch {
-    ArrayDeque<Cell> stack, path;
+final class RecursiveDFS extends AbstractSearch {
+    LinkedList<Cell> stack, path;
 
     RecursiveDFS(boolean bidirectional) {
         super(bidirectional);
-        this.stack = new ArrayDeque<>();
+        this.stack = new LinkedList<>();
     }
     @Override
-    void addCell(Cell next) {
-        exploredCells.add(next);
+    void reset(){
+        for (Cell cell : stack) cell.reset();
+        stack.clear();
+    }
+    @Override
+    void addCell(Cell next){
         stack.push(next);
+        if(next != start && next != target) {
+            if (next.prev == start) search(next, target);
+            else if (next.prev == target) search(start, next);
+        }
     }
     @Override
-    void updateCell(Cell next) {}
+    void updateCell(Cell next){
+    }
     @Override
     int numRemainingCells() {return stack.size();}
     @Override
     Cell findNextCell() {
-        return stack.pop();
-    }
-
-    @Override
-    boolean updatePath(Cell neighbor) {
-        return false;
-    }
-
-    @Override
-    public ArrayDeque<Cell> search(Cell start, Cell target) {
-        reset();
-        start.forwardVisited = true;
-        this.start = start;
-
-        target.forwardVisited = false;
-        this.target = target;
-        addCell(start);
-        if (bidirectional) addCell(target);
-        
-        return dfsRecursive();
-    }
-    ArrayDeque<Cell> dfsRecursive() {
-        cur = findNextCell();
-
-        for (Cell neighbor : cur.neighbors){
-            if (neighbor.forwardVisited == null){
-                neighbor.forwardVisited = cur.forwardVisited;
-                neighbor.prev = cur;
-                addCell(neighbor);
-            }
-            else if (neighbor.forwardVisited != cur.forwardVisited){
-                return traceback(neighbor);
-            }
-            else if (traceback(cur).size() + 1 < traceback(neighbor).size()){
-                neighbor.prev = cur;
-            }
-        }return null;
+        return stack.isEmpty() ? null : stack.pop();
     }
 }

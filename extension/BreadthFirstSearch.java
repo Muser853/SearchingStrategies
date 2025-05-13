@@ -1,16 +1,19 @@
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public final class MazeBreadthFirstSearch extends AbstractMazeSearch {
+public final class BreadthFirstSearch extends AbstractSearch {
     private final Queue<Cell> queue;
 
-    public MazeBreadthFirstSearch(boolean bidirectional){
+    public BreadthFirstSearch(boolean bidirectional){
         super(bidirectional);
         this.queue = new ArrayDeque<>();
     }
     @Override
+    void reset(){
+        queue.clear();
+    }
+    @Override
     void addCell(Cell next) {
-        exploredCells.add(next);
         queue.offer(next);
     }
     @Override
@@ -25,10 +28,5 @@ public final class MazeBreadthFirstSearch extends AbstractMazeSearch {
     Cell findNextCell() {
         if (queue.isEmpty()) return null;
         return queue.poll();
-    }
-
-    @Override
-    boolean updatePath(Cell neighbor) {
-        return false;
     }
 }

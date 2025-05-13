@@ -6,7 +6,7 @@ public final class IterativeDeepeningASearch extends AbstractSearch{
     public IterativeDeepeningASearch(Boolean euclidean, boolean bidirectional){
         super(bidirectional);
 
-        this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell ->cell.calculateHeuristics(euclidean, cell.g < 0 ? target : start)
+        this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell ->cell.calculateHeuristics(euclidean, cell.g < 0 ? start : target)
         + Math.abs(cell.g)
         )) : new Heap<>(Comparator.comparingInt(cell ->target.calculateHeuristics(euclidean, cell)
         + Math.abs(cell.g)

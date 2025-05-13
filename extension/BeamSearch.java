@@ -7,7 +7,7 @@ public class BeamSearch extends AbstractSearch{
         super(bidirectional);
 
         this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell -> cell.calculateHeuristics(
-                euclidean, cell.g < 0 ? target : start))) : new Heap<>(Comparator.comparingInt(cell ->
+                euclidean, cell.g < 0 ? start : target))) : new Heap<>(Comparator.comparingInt(cell ->
                 target.calculateHeuristics(euclidean, cell)));
     }
     public void reset(){

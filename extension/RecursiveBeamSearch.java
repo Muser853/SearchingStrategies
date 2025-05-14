@@ -1,36 +1,62 @@
 import java.util.Comparator;
 
-public final class RecursiveBeamSearch extends AbstractSearch{
+public final class RecursiveBeamSearch extends AbstractSearch {
     private final PriorityQueue<Cell> heap;
+    private final int beamWidth;
 
-    public RecursiveBeamSearch(Boolean euclidean, boolean bidirectional){
+    public RecursiveBeamSearch(Boolean euclidean, boolean bidirectional, int beamWidth) {
         super(bidirectional);
+        this.beamWidth = beamWidth;
+        
         this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell -> cell.calculateHeuristics(
                 euclidean, cell.g < 0 ? start : target))) : new Heap<>(Comparator.comparingInt(cell ->
                 target.calculateHeuristics(euclidean, cell)));
     }
-    void reset(){
-        for(Cell cell : heap) cell.reset();
+
+    @Override
+    public void reset() {
+        for (Cell cell : heap) cell.reset();
         heap.clear();
     }
-    void addCell(Cell next){
-        heap.offer(next);
 
-        if (next != start && next != target){
-            if (next.prev == start) search(next, target);
-            else if (next.prev == target) search(start, next);
+    @Override
+    public void addCell(Cell next) {
+        // Only add cell if it's within beam width
+        if (heap.size() < beamWidth) {
+            heap.offer(next);
+        } else {
+            // Replace the worst cell if the new cell is better
+            Cell worst = heap.peek();
+            if (worst != null && next.calculateHeuristics(bidirectional, target) < worst.calculateHeuristics(bidirectional, target)) {
+                heap.poll();
+                heap.offer(next);
+            }
+        }
+        // Start recursive search if we're not at start/target
+        if (next != start && next != target) {
+            if (next.prev == start) {
+                // Start forward search from current cell to target
+                search(next, target);
+
+            } else if (next.prev == target) {
+                // Start backward search from start to current cell
+                search(start, next);
+            }
         }
     }
+
     @Override
-    void updateCell(Cell next) {
+    public void updateCell(Cell next) {
         heap.updatePriority(next);
     }
+
     @Override
-    int numRemainingCells() {
+    public int numRemainingCells() {
         return heap.size();
     }
+
     @Override
-    Cell findNextCell(){
+    public Cell findNextCell() {
         return heap.isEmpty() ? null : heap.poll();
     }
 }

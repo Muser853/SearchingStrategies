@@ -1,24 +1,21 @@
-import java.util.ArrayDeque;
-
 public final class DepthFirstSearch extends AbstractSearch {
-    private final ArrayDeque<Cell> stack;
+    private final LinkedList<Cell> stack;
 
     public DepthFirstSearch(boolean bidirectional) {
         super(bidirectional);
-        this.stack = new ArrayDeque<>();
+        this.stack = new LinkedList<>();
     }
     void reset(){
         for (Cell cell : stack) cell.reset();
         stack.clear();
     }
-    @Override
     void addCell(Cell next) {
-        stack.push(next);
+        stack.addFirst(next);
     }
-    @Override
-    void updateCell(Cell next) {}
-    @Override
+    void updateCell(Cell next) {
+    }
     int numRemainingCells() {return stack.size();}
-    @Override
-    Cell findNextCell() {return stack.isEmpty() ? null : stack.pop();}
+    Cell findNextCell() {
+        return stack.isEmpty() ? null : stack.remove();
+    }
 }

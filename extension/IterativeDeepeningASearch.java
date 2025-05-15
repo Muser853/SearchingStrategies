@@ -1,31 +1,51 @@
-import java.util.Comparator;
-
-public final class IterativeDeepeningASearch extends AbstractSearch{
-    private final PriorityQueue<Cell> heap;
+public final class IterativeDeepeningASearch extends AbstractSearch {
+    private final LinkedList<Cell> stack;
+    private final Boolean euclid;
+    private int currentFCost = 0;
+    public int gap;
 
     public IterativeDeepeningASearch(Boolean euclidean, boolean bidirectional){
         super(bidirectional);
+        this.euclid = euclidean;
+        this.stack = new LinkedList<>();
+    }
+    public void reset(){
+        currentFCost = 0;
+        for (Cell cell : stack) cell.reset();
+        stack.clear();
+    }
+    protected void addCell(Cell next){
+        if (Math.abs(next.g) + next.calculateHeuristics(euclid,
+        next.g < 0 ? start : target) > currentFCost) return;
 
-        this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell ->cell.calculateHeuristics(euclidean, cell.g < 0 ? start : target)
-        + Math.abs(cell.g)
-        )) : new Heap<>(Comparator.comparingInt(cell ->target.calculateHeuristics(euclidean, cell)
-        + Math.abs(cell.g)
-        ));
+        stack.addFirst(next);
+        if (next != start && next != target) {
+            if (next.prev == start) {
+                for (Cell neighbor : next.neighbors) {
+                    if (neighbor != next.prev && neighbor.g == 0) {
+                        search(neighbor, target);
+                    }
+                }
+            } else if (next.prev == target) {
+                for (Cell neighbor : next.neighbors) {
+                    if (neighbor != next.prev && neighbor.g == 0) {
+                        search(start, neighbor);
+                    }
+                }
+            }
+        }
     }
-    void reset(){
-        for (Cell cell: heap) cell.reset();
-        heap.clear();
+    protected void updateCell(Cell next){
     }
-    int numRemainingCells(){
-        return heap.size();
+    protected int numRemainingCells(){
+        return stack.size();
     }
-    Cell findNextCell(){
-        return heap.isEmpty() ? null : heap.poll();
-    }
-    void addCell(Cell cell){
-        heap.offer(cell);
-    }
-    void updateCell(Cell cell){
-        heap.updatePriority(cell);
+    protected Cell findNextCell(){
+        Cell cur = stack.remove();
+        if (Math.abs(cur.g)+cur.calculateHeuristics(euclid,
+                cur.g < 0 ? start : target) > currentFCost)// No more cells at current f-cost limit
+            currentFCost += gap;
+
+        return cur;
     }
 }

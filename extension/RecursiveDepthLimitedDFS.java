@@ -1,19 +1,25 @@
-public final class RecursiveIDDFS extends AbstractSearch {
+public final class RecursiveDepthLimitedDFS extends AbstractSearch{
     private final LinkedList<Cell> stack;
-    private int currentDepth = 1;
-    public int gap = 1;
+    public int depthLimit;
 
-    public RecursiveIDDFS(boolean bidirectional){
+    public RecursiveDepthLimitedDFS(boolean bidirectional){
         super(bidirectional);
         this.stack = new LinkedList<>();
     }
     public void reset(){
-        for (Cell cell: stack) cell.reset();
+        for(Cell cell : stack) cell.reset();
         stack.clear();
-        currentDepth = 1;
+    }
+    protected int numRemainingCells(){
+        return stack.size();
+    }
+    protected void updateCell(Cell next){
     }
     protected void addCell(Cell next){
-        if (Math.abs(next.g) == currentDepth){
+        if (Math.abs(next.g) > depthLimit){
+            explored.addFirst(next);
+        }
+        else{
             stack.addFirst(next);
             if (next != start && next != target){
                 if (next.prev == start){
@@ -28,15 +34,9 @@ public final class RecursiveIDDFS extends AbstractSearch {
                     }
                 }
             }
-        }else stack.addLast(next);
-    }
-    protected void updateCell(Cell next){
-    }
-    public int numRemainingCells(){
-        return stack.size();
+        }
     }
     protected Cell findNextCell(){
-        if (Math.abs(stack.getFirst().g) != currentDepth) currentDepth += gap;
         return stack.remove();
     }
 }

@@ -1,20 +1,17 @@
-import java.util.ArrayDeque;
-import java.util.Queue;
-
 public final class BreadthFirstSearch extends AbstractSearch {
-    private final Queue<Cell> queue;
+    private final LinkedList<Cell> queue;
 
     public BreadthFirstSearch(boolean bidirectional){
         super(bidirectional);
-        this.queue = new ArrayDeque<>();
+        this.queue = new LinkedList<>();
     }
-    @Override
     void reset(){
+        for (Cell cell : queue) cell.reset();
         queue.clear();
     }
     @Override
     void addCell(Cell next) {
-        queue.offer(next);
+        queue.addLast(next);
     }
     @Override
     void updateCell(Cell next) {}
@@ -25,8 +22,7 @@ public final class BreadthFirstSearch extends AbstractSearch {
     }
 
     @Override
-    Cell findNextCell() {
-        if (queue.isEmpty()) return null;
-        return queue.poll();
+    Cell findNextCell(){
+        return queue.remove();
     }
 }

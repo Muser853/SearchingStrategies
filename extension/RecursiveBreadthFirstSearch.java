@@ -1,16 +1,16 @@
-public final class RecursiveDFS extends AbstractSearch {
-    private final LinkedList<Cell> stack;
-
-    public RecursiveDFS(boolean bidirectional){
+public class RecursiveBreadthFirstSearch extends AbstractSearch {
+    private final LinkedList<Cell> queue;
+    
+    public RecursiveBreadthFirstSearch(boolean bidirectional) {
         super(bidirectional);
-        this.stack = new LinkedList<>();
+        this.queue = new LinkedList<>();
     }
-    public void reset(){
-        for (Cell cell : stack) cell.reset();
-        stack.clear();
+    void reset(){
+        for(Cell cell : queue) cell.reset();
+        this.queue.clear();
     }
-    protected void addCell(Cell next){
-        stack.addFirst(next);
+    public void addCell(Cell next){
+        queue.addLast(next);
         if (next != start && next != target){
             if (next.prev == start){
                 for (Cell nextNeighbors : next.neighbors){
@@ -25,12 +25,12 @@ public final class RecursiveDFS extends AbstractSearch {
             }
         }
     }
-    protected void updateCell(Cell next){
+    public void updateCell(Cell next){
     }
-    public int numRemainingCells() {
-        return stack.size();
+    public int numRemainingCells(){
+        return queue.size();
     }
-    protected Cell findNextCell() {
-        return stack.remove();
+    public Cell findNextCell(){
+        return queue.remove();
     }
 }

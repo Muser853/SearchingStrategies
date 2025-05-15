@@ -1,6 +1,9 @@
 import java.lang.Iterable;
+import java.util.Comparator;
 
 interface PriorityQueue<T> extends Iterable<T>{
+    Comparator<T> comparator();
+    T getLast();
     T peek();
     T poll();
     void offer(T item);

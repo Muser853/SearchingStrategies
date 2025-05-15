@@ -5,9 +5,8 @@ public final class RecursiveGreedySearch extends AbstractSearch {
 
     public RecursiveGreedySearch(Boolean euclidean, boolean bidirectional){
         super(bidirectional);
-        this.heap = bidirectional ? new Heap<>(Comparator.comparingInt(cell -> cell.calculateHeuristics(
-                euclidean, cell.g < 0 ? start : target))) : new Heap<>(Comparator.comparingInt(cell ->
-                target.calculateHeuristics(euclidean, cell)));
+        this.heap = new Heap<>(Comparator.comparingInt(cell -> cell.calculateHeuristics(
+            euclidean, cell.g < 0 ? start : target)));
     }
     void reset(){
         for(Cell cell : heap) cell.reset();
@@ -15,10 +14,18 @@ public final class RecursiveGreedySearch extends AbstractSearch {
     }
     public void addCell(Cell next){
         heap.offer(next);
-
-        if(next != start && next != target){
-            if (next.prev == start) search(next, target);
-            else if (next.prev == target) search(start, next);
+        if (next != start && next != target) {
+            if (next.prev == start) {
+                for (Cell nextNeighbors : next.neighbors) {
+                    if (nextNeighbors != next.prev && nextNeighbors.g == 0)
+                        search(nextNeighbors, target);
+                }
+            }else if (next.prev == target) {
+                for (Cell nextNeighbors : next.neighbors) {
+                    if (nextNeighbors != next.prev && nextNeighbors.g == 0)
+                        search(start, nextNeighbors);
+                }
+            }
         }
     }
     public void updateCell(Cell next){
@@ -28,6 +35,6 @@ public final class RecursiveGreedySearch extends AbstractSearch {
         return heap.size();
     }
     public Cell findNextCell(){
-        return heap.isEmpty() ? null : heap.poll();
+        return heap.poll();
     }
 }

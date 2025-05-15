@@ -1,16 +1,25 @@
-public final class RecursiveDFS extends AbstractSearch {
+public final class RecursiveIterativeDeepeningGreedySearch extends AbstractSearch{
     private final LinkedList<Cell> stack;
+    private final Boolean euclid;
+    private int currentBest = 0;
+    public int gap;
 
-    public RecursiveDFS(boolean bidirectional){
+    public RecursiveIterativeDeepeningGreedySearch(Boolean euclidean, boolean bidirectional){
         super(bidirectional);
+        this.euclid = euclidean;
         this.stack = new LinkedList<>();
     }
     public void reset(){
-        for (Cell cell : stack) cell.reset();
+        for(Cell cell: stack) cell.reset();
         stack.clear();
     }
     protected void addCell(Cell next){
-        stack.addFirst(next);
+        if (next.calculateHeuristics(euclid,
+                next.g < 0 ? start : target) > currentBest)
+            stack.addLast(next);
+        else
+            stack.addFirst(next);
+            
         if (next != start && next != target){
             if (next.prev == start){
                 for (Cell nextNeighbors : next.neighbors){
@@ -25,12 +34,16 @@ public final class RecursiveDFS extends AbstractSearch {
             }
         }
     }
-    protected void updateCell(Cell next){
+    protected void updateCell(Cell next) {
     }
-    public int numRemainingCells() {
+    protected int numRemainingCells() {
         return stack.size();
     }
-    protected Cell findNextCell() {
-        return stack.remove();
+    protected Cell findNextCell(){
+        Cell cur = stack.remove();
+        if (cur.calculateHeuristics(euclid, cur.g < 0 ? start : target) > currentBest)
+            currentBest += gap;
+
+        return cur;
     }
 }

@@ -40,7 +40,7 @@ public final class RecursiveIterativeDeepeningGreedySearch extends AbstractSearc
         return stack.size();
     }
     protected Cell findNextCell(){
-        Cell cur = stack.remove();
+        cur = stack.remove();
         if (cur.calculateHeuristics(euclid, cur.g < 0 ? start : target) > currentBest)
             currentBest += gap;
 

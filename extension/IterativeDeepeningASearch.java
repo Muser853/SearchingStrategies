@@ -41,7 +41,7 @@ public final class IterativeDeepeningASearch extends AbstractSearch {
         return stack.size();
     }
     protected Cell findNextCell(){
-        Cell cur = stack.remove();
+        cur = stack.remove();
         if (Math.abs(cur.g)+cur.calculateHeuristics(euclid,
                 cur.g < 0 ? start : target) > currentFCost)// No more cells at current f-cost limit
             currentFCost += gap;

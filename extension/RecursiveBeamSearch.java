@@ -1,15 +1,15 @@
 import java.util.Comparator;
 
-public final class RecursiveBeamSearch extends AbstractSearch {
+public final class RecursiveBeamSearch extends AbstractSearch{
     private final PriorityQueue<Cell> heap;
     public int beamWidth;
 
-    public RecursiveBeamSearch(Boolean euclidean, boolean bidirectional) {
+    public RecursiveBeamSearch(Boolean euclidean, boolean bidirectional){
         super(bidirectional);
         this.heap = new Heap<>(Comparator.comparingInt(cell -> cell.calculateHeuristics(
             euclidean, cell.g < 0 ? start : target)));
     }
-    public void reset() {
+    public void reset(){
         for (Cell cell : heap) cell.reset();
         heap.clear();
     }

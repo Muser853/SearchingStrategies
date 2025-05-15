@@ -1,7 +1,7 @@
 public final class RecursiveIDDFS extends AbstractSearch {
     private final LinkedList<Cell> stack;
     private int currentDepth = 1;
-    public int gap = 1;
+    public int gap;
 
     public RecursiveIDDFS(boolean bidirectional){
         super(bidirectional);

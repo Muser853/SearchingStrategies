@@ -37,11 +37,6 @@ public class SearchSimulation{
         }
     }
     public static void main(String[] args){
-        if (cellLevels.size() == 1){
-            for (Cell c : cellLevels.get(0))
-            System.out.println(c.toString());
-            return;
-        }
         for (boolean directional : bidirectional){
             experimentFor(new BreadthFirstSearch(directional));
             experimentFor(new RecursiveBreadthFirstSearch(directional));

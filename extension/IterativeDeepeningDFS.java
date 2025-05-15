@@ -1,16 +1,15 @@
 public final class IterativeDeepeningDFS extends AbstractSearch {
-    private final LinkedList<Cell> stack;
+    private final LinkedList<Cell> stack = new LinkedList<>();
     private int currentDepth = 1;
     public int gap;
     
     public IterativeDeepeningDFS(boolean bidirectional){
         super(bidirectional);
-        this.stack = new LinkedList<>();
     }
     public void reset(){
+        currentDepth = 1;
         for(Cell cell : stack) cell.reset();
         stack.clear();
-        currentDepth = 1;
     }
     protected void updateCell(Cell next){
     }

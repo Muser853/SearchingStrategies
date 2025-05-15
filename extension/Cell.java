@@ -2,54 +2,17 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Cell {
+public final class Cell {
     static final int[][] faceRotationIndices = {
         {4, 0, 5, 1}, // up
         {1, 5, 0, 4}, // down
-
+        
         {2, 0, 3, 1}, // back
         {1, 3, 0, 2}, // front
-
+        
         {1, 5, 6, 3}, // left
         {3, 6, 5, 1}// right
     };
-    public static final ArrayList<LinkedList<Cell>> cellLevels = new ArrayList<>();
-    static{
-        final ArrayList<Integer> origin = new ArrayList<>(List.of(0,3,6,9,12,15,18));
-        ArrayList<Integer> newCoord;
-        int[] rotation;
-        int[] oneArray;
-        int index;
-        int value;
-        Cell polled;
-        HashMap<List<Integer>, Cell> cellMap = new HashMap<>();
-        cellMap.put(origin, new Cell(origin));
-        LinkedList<Cell> ends = new LinkedList<>();
-        ends.addFirst(cellMap.get(origin));
-
-        for (int size = 1; size > 0; size = ends.size()){
-            cellLevels.add(new LinkedList<Cell>(ends));
-            for (int i = 0; i < size; i++){
-                polled = ends.remove();
-                for (int j = 0; j < 6; j++){
-                    newCoord = new ArrayList<>(polled.coord);
-                    rotation = faceRotationIndices[2 + j % 2];
-                    oneArray = faceRotationIndices[j];
-                    for (int k = 0; k < 4; k++){
-                        newCoord.set(oneArray[rotation[k]],
-                                (value = polled.coord.get(index = oneArray[k]) - polled.coord.get(index) % 3
-                                        + (polled.coord.get(index) * 2) % 3
-                                        - i / 2
-                                ) < polled.coord.get(index) - polled.coord.get(index) % 3
-
-                                        ? value + 3 : value);
-                    }
-                    ends.addLast(cellMap.putIfAbsent(newCoord, new Cell(newCoord)));
-                    polled.neighbors[j] = cellMap.get(newCoord);
-                }
-            }
-        }
-    }
     protected final ArrayList<Integer> coord;
     public final Cell[] neighbors = new Cell[6];
     Cell prev = null; // previous cell in path
@@ -62,6 +25,45 @@ public class Cell {
         prev = null;
         g = 0;
     }
+
+    protected static ArrayList<LinkedList<Cell>> generateCellLevels(){
+        final ArrayList<LinkedList<Cell>> cellLevels = new ArrayList<>();
+        final ArrayList<Integer> origin = new ArrayList<>(List.of (0,3,6,9,12,15,18));
+        ArrayList<Integer> newCoord;
+        HashMap<ArrayList<Integer>, Cell> cellMap = new HashMap<>();
+        cellMap.put(origin, new Cell(origin));
+        LinkedList<Cell> ends = new LinkedList<>();
+        ends.addFirst(cellMap.get(origin));
+
+        for (int size = 1; size > 0; size = ends.size()){
+            cellLevels.add(new LinkedList<Cell>(ends));
+            Cell polled;
+            for (int i = 0; i < size; i++){
+                polled = ends.remove();
+                for (int j = 0; j < 6; j++){
+                    newCoord = new ArrayList<>(polled.coord);
+                    int[] rotation = faceRotationIndices[2 + j % 2];
+                    int[] oneArray = faceRotationIndices[j];
+                    int index;
+                    int value;
+                    for (int k = 0; k < 4; k++){
+                        index = oneArray[k];
+                        newCoord.set(oneArray[rotation[k]],
+                            (value = polled.coord.get(index) - polled.coord.get(index) % 3
+                            + (polled.coord.get(index) * 2) % 3
+                            - i / 2) < polled.coord.get(index) - polled.coord.get(index) % 3
+                        ? value + 3 : value);
+                    }
+                    cellMap.computeIfAbsent(newCoord, (key) -> {
+                        ends.addLast(new Cell(key));
+                        return ends.getLast();
+                    });
+                    polled.neighbors[j] = cellMap.get(newCoord);
+                }
+            }
+        }return cellLevels;
+    }
+
     public int calculateHeuristics(Boolean euclidean, Cell target){
         int sum = 0;
         if (euclidean == null){

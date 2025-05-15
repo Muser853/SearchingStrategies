@@ -1,9 +1,8 @@
 public final class RecursiveDFS extends AbstractSearch {
-    private final LinkedList<Cell> stack;
+    private final LinkedList<Cell> stack = new LinkedList<>();
 
     public RecursiveDFS(boolean bidirectional){
         super(bidirectional);
-        this.stack = new LinkedList<>();
     }
     public void reset(){
         for (Cell cell : stack) cell.reset();

@@ -1,9 +1,8 @@
 public class RecursiveBreadthFirstSearch extends AbstractSearch {
-    private final LinkedList<Cell> queue;
+    private final LinkedList<Cell> queue = new LinkedList<>();
     
     public RecursiveBreadthFirstSearch(boolean bidirectional) {
         super(bidirectional);
-        this.queue = new LinkedList<>();
     }
     void reset(){
         for(Cell cell : queue) cell.reset();

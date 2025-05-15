@@ -1,5 +1,5 @@
 public final class RecursiveIDASearch extends AbstractSearch {
-    private final LinkedList<Cell> stack;
+    private final LinkedList<Cell> stack = new LinkedList<>();
     private final Boolean euclid;
     private int currentFCost = 0;
     public int gap;
@@ -7,7 +7,6 @@ public final class RecursiveIDASearch extends AbstractSearch {
     public RecursiveIDASearch(Boolean euclidean, boolean bidirectional) {
         super(bidirectional);
         this.euclid = euclidean;
-        this.stack = new LinkedList<>();
     }
     public void reset(){
         currentFCost = 0;

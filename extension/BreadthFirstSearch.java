@@ -1,9 +1,8 @@
 public final class BreadthFirstSearch extends AbstractSearch {
-    private final LinkedList<Cell> queue;
-
+    private final LinkedList<Cell> queue = new LinkedList<>();
+    
     public BreadthFirstSearch(boolean bidirectional){
         super(bidirectional);
-        this.queue = new LinkedList<>();
     }
     void reset(){
         for (Cell cell : queue) cell.reset();

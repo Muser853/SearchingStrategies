@@ -20,7 +20,7 @@ public final class LinkedList<T> implements Iterable<T> {
     public LinkedList(LinkedList<T> list){
         this();
         for (T item : list){
-            this.addFirst(item);
+            addFirst(item);
         }
     }
     public int size(){return size;}
@@ -49,9 +49,9 @@ public final class LinkedList<T> implements Iterable<T> {
         if (item == null) return;
         if (size == 0){
             head = tail = new Node<>(item, null);
-        } else {
-            tail = tail.next = new Node<>(item, null);
+            return;
         }
+        tail = tail.next = new Node<>(item, null);
         size++;
     }
     public void addFirst(T item){

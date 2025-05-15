@@ -1,9 +1,8 @@
 public final class DepthFirstSearch extends AbstractSearch {
-    private final LinkedList<Cell> stack;
+    private final LinkedList<Cell> stack = new LinkedList<>();
 
     public DepthFirstSearch(boolean bidirectional) {
         super(bidirectional);
-        this.stack = new LinkedList<>();
     }
     void reset(){
         for (Cell cell : stack) cell.reset();

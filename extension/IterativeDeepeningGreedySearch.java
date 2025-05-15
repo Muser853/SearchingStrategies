@@ -1,5 +1,5 @@
 public final class IterativeDeepeningGreedySearch extends AbstractSearch{
-    private final LinkedList<Cell> stack;
+    private final LinkedList<Cell> stack = new LinkedList<>();
     private final Boolean euclid;
     private int currentBest = 0;
     public int gap;
@@ -7,9 +7,9 @@ public final class IterativeDeepeningGreedySearch extends AbstractSearch{
     public IterativeDeepeningGreedySearch(Boolean euclidean, boolean bidirectional){
         super(bidirectional);
         this.euclid = euclidean;
-        this.stack = new LinkedList<>();
     }
     public void reset(){
+        currentBest = 0;
         for(Cell cell: stack) cell.reset();
         stack.clear();
     }

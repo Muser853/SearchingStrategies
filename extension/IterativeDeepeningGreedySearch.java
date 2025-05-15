@@ -26,10 +26,9 @@ public final class IterativeDeepeningGreedySearch extends AbstractSearch{
     }
     protected Cell findNextCell(){
         cur = stack.remove();
-        if (cur.calculateHeuristics(euclid,
-                cur.g < 0 ? start : target) > currentBest)
+        if (cur.calculateHeuristics(euclid, cur.g < 0 ? start : target) > currentBest){
             currentBest += gap;
-
+        }
         return cur;
     }
 }

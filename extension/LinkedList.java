@@ -2,11 +2,11 @@ import java.util.Iterator;
 
 public final class LinkedList<T> implements Iterable<T> {
     private int size;
-    protected Node<T> head, tail;
+    Node<T> head, tail;
     
     static class Node<T>{
-        protected T data;
-        protected Node<T> next;
+        T data;
+        Node<T> next;
 
         public Node(T data, Node<T> next){
             this.data = data;
@@ -46,16 +46,15 @@ public final class LinkedList<T> implements Iterable<T> {
         }
     }
     public void addLast(T item){
-        if (item == null) return;
         if (size == 0){
             head = tail = new Node<>(item, null);
-            return;
         }
-        tail = tail.next = new Node<>(item, null);
+        else{
+            tail = tail.next = new Node<>(item, null);
+        }
         size++;
     }
     public void addFirst(T item){
-        if (item == null) return;
         head = new Node<>(item, head);
         if (size == 0) tail = head;
         size++;

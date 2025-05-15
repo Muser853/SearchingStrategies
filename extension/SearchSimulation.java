@@ -26,7 +26,7 @@ public final class SearchSimulation{
                             cellCount++;
                         }
                     }
-                }System.out.printf("from level %d to level %d: pathLength: %d, stored: %d, nextFound: %d\n cellCount: %d\n averagePathLength: %.4f, averageCellsStored: %.4f, averageNextFound: %.4f\n",
+                }System.out.printf("From Level %d to Level %d: PathLength: %d, Stored: %d, NextFound: %d\n CellCount: %d\n AveragePathLength: %.4f, AverageCellsStored: %.4f, AverageNextFound: %.4f\n",
                         i, j, totalPathLength, totalStored, totalNextFound, cellCount,
                         totalPathLength/(double)cellCount, totalStored/(double)cellCount, totalNextFound/(double)cellCount);
                 totalPathLength = totalStored = totalNextFound = cellCount = 0;
@@ -69,7 +69,7 @@ public final class SearchSimulation{
             recursiveIDDFSearcher = new RecursiveIDDFS(directional);
             for (int gap = 1; gap < 16; gap++){
                 iterativeDeepeningSearcher.gap = recursiveIDDFSearcher.gap = gap;
-                System.out.printf("gap: %d\n", gap);
+                System.out.printf("Gap: %d\n", gap);
                 experimentFor(iterativeDeepeningSearcher);
                 experimentFor(recursiveIDDFSearcher);
             }
@@ -78,32 +78,28 @@ public final class SearchSimulation{
                 experimentFor(new GreedySearch(euclidean, directional));
                 experimentFor(new RecursiveGreedySearch(euclidean, directional));
 
-                iterativeDeepeningGreedySearcher = new IterativeDeepeningGreedySearch(euclidean, directional);
-                recursiveIterativeDeepeningGreedySearch = new RecursiveIterativeDeepeningGreedySearch(euclidean, directional);
-                for (int gap = 1; gap < 16; gap++){
-                    iterativeDeepeningGreedySearcher.gap = recursiveIterativeDeepeningGreedySearch.gap = gap;
-                    System.out.printf("gap: %d\n", gap);
-                    experimentFor(iterativeDeepeningGreedySearcher);
-                    experimentFor(recursiveIterativeDeepeningGreedySearch);
-                }
-
                 experimentFor(new ASearch(euclidean, directional));
                 experimentFor(new RecursiveASearch(euclidean, directional));
-
+                
+                iterativeDeepeningGreedySearcher = new IterativeDeepeningGreedySearch(euclidean, directional);
+                recursiveIterativeDeepeningGreedySearch = new RecursiveIterativeDeepeningGreedySearch(euclidean, directional);
                 iterativeDeepeningASearcher = new IterativeDeepeningASearch(euclidean, directional);
                 recursiveIDASearcher = new RecursiveIDASearch(euclidean, directional);
-                for (int gap = 1; gap < 32; gap++){
-                    iterativeDeepeningASearcher.gap = recursiveIDASearcher.gap = gap;
-                    System.out.printf("gap: %d\n", gap);
-                    experimentFor(iterativeDeepeningASearcher);
-                    experimentFor(recursiveIDASearcher);
-                }
-
                 beamSearcher = new BeamSearch(euclidean, directional);
                 recursiveBeamSearcher = new RecursiveBeamSearch(euclidean, directional);
-                for(int max = 1; max < 64; max++){
-                    beamSearcher.beamWidth = recursiveBeamSearcher.beamWidth = max;
-                    System.out.printf("beamWidth: %d\n", max);
+                
+                for (int gap = 1; gap < 32; gap++){
+                    iterativeDeepeningGreedySearcher.gap = recursiveIterativeDeepeningGreedySearch.gap 
+                    = iterativeDeepeningASearcher.gap = recursiveIDASearcher.gap 
+                    = beamSearcher.beamWidth = recursiveBeamSearcher.beamWidth = gap;
+                    System.out.printf("Gap: %d\n", gap);
+
+                    experimentFor(iterativeDeepeningGreedySearcher);
+                    experimentFor(recursiveIterativeDeepeningGreedySearch);
+
+                    experimentFor(iterativeDeepeningASearcher);
+                    experimentFor(recursiveIDASearcher);
+                    
                     experimentFor(beamSearcher);
                     experimentFor(recursiveBeamSearcher);
                 }

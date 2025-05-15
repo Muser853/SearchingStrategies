@@ -21,7 +21,7 @@ public final class IterativeDeepeningDFS extends AbstractSearch {
         else stack.addLast(next);
     }
     protected Cell findNextCell(){
-        if (Math.abs(stack.getFirst().g) != currentDepth) currentDepth += gap;
+        if (Math.abs(stack.getFirst().g) > currentDepth) currentDepth += gap;
         return stack.remove();
     }
     protected int numRemainingCells(){

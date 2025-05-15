@@ -36,7 +36,7 @@ public final class RecursiveIDDFS extends AbstractSearch {
         return stack.size();
     }
     protected Cell findNextCell(){
-        if (Math.abs(stack.getFirst().g) != currentDepth) currentDepth += gap;
+        if (Math.abs(stack.getFirst().g) > currentDepth) currentDepth += gap;
         return stack.remove();
     }
 }

@@ -1,7 +1,8 @@
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public final class Cell {
+public class Cell {
     static final int[][] faceRotationIndices = {
         {4, 0, 5, 1}, // up
         {1, 5, 0, 4}, // down
@@ -12,23 +13,16 @@ public final class Cell {
         {1, 5, 6, 3}, // left
         {3, 6, 5, 1}// right
     };
-    public static final ArrayList<Integer> origin = new ArrayList<>();
-    public static ArrayList<LinkedList<Cell>> cellLevels = new ArrayList<>();
+    public static final ArrayList<LinkedList<Cell>> cellLevels = new ArrayList<>();
     static{
-        origin.add(0);
-        origin.add(3);
-        origin.add(6);
-        origin.add(9);
-        origin.add(12);
-        origin.add(15);
-        origin.add(18);
+        final ArrayList<Integer> origin = new ArrayList<>(List.of(0,3,6,9,12,15,18));
         ArrayList<Integer> newCoord;
         int[] rotation;
         int[] oneArray;
         int index;
         int value;
         Cell polled;
-        HashMap<ArrayList<Integer>, Cell> cellMap = new HashMap<>();
+        HashMap<List<Integer>, Cell> cellMap = new HashMap<>();
         cellMap.put(origin, new Cell(origin));
         LinkedList<Cell> ends = new LinkedList<>();
         ends.addFirst(cellMap.get(origin));

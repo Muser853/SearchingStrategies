@@ -35,6 +35,9 @@ public final class RecursiveIDASearch extends AbstractSearch {
         }
     }
     protected void updateCell(Cell next){
+        if (next.calculateHeuristics(euclid, next.g < 0 ? start : target) <= currentFCost){
+            stack.addFirst(stack.remove(next));
+        }
     }
     protected int numRemainingCells(){
         return stack.size();
@@ -42,9 +45,9 @@ public final class RecursiveIDASearch extends AbstractSearch {
     protected Cell findNextCell(){
         Cell cur = stack.remove();
         if (Math.abs(cur.g)+cur.calculateHeuristics(euclid,
-                cur.g < 0 ? start : target) > currentFCost)
+                cur.g < 0 ? start : target) > currentFCost){
             currentFCost += gap;
-
+        }
         return cur;
     }
 }

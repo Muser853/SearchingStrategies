@@ -35,6 +35,9 @@ public final class IterativeDeepeningASearch extends AbstractSearch {
         }
     }
     protected void updateCell(Cell next){
+        if (next.calculateHeuristics(euclid, next.g < 0 ? start : target) <= currentFCost){
+            stack.addFirst(stack.remove(next));
+        }
     }
     protected int numRemainingCells(){
         return stack.size();

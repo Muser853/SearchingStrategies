@@ -12,6 +12,9 @@ public final class IterativeDeepeningDFS extends AbstractSearch {
         stack.clear();
     }
     protected void updateCell(Cell next){
+        if (Math.abs(next.g) <= currentDepth){
+            stack.addFirst(stack.remove(next));
+        }
     }
     protected void addCell(Cell next){
         if (Math.abs(next.g) == currentDepth){

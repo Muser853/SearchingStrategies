@@ -34,16 +34,20 @@ public final class RecursiveIterativeDeepeningGreedySearch extends AbstractSearc
             }
         }
     }
-    protected void updateCell(Cell next) {
+    protected void updateCell(Cell next){
+        if (next.calculateHeuristics(euclid, next.g < 0 ? start : target) <= currentBest){
+            stack.addFirst(stack.remove(next));
+        }
     }
     protected int numRemainingCells() {
         return stack.size();
     }
     protected Cell findNextCell(){
         cur = stack.remove();
-        if (cur.calculateHeuristics(euclid, cur.g < 0 ? start : target) > currentBest)
+        if (cur.calculateHeuristics(euclid, 
+        cur.g < 0 ? start : target) > currentBest){
             currentBest += gap;
-
+        }
         return cur;
     }
 }

@@ -6,10 +6,9 @@ public class SearchSimulation{
     private static int totalNextFound = 0;
     private static int cellCount = 0;
     private static final Boolean[] euclidean = {Boolean.FALSE, null, Boolean.TRUE};
-    private static final boolean[] bidirectional = {false, true};
     private static final ArrayList<LinkedList<Cell>> cellLevels = Cell.generateCellLevels();
 
-    static final void experimentFor(AbstractSearch searcher){
+    static void experimentFor(AbstractSearch searcher){
         System.out.printf("%s %s\n", searcher.bidirectional ?
         "bidirectional":"unidirectional", searcher.getClass().getSimpleName());
         //CSV Header
@@ -37,7 +36,7 @@ public class SearchSimulation{
         }
     }
     public static void main(String[] args){
-        for (boolean directional : bidirectional){
+        for (boolean directional : new boolean[]{false, true}){
             experimentFor(new BreadthFirstSearch(directional));
             experimentFor(new RecursiveBreadthFirstSearch(directional));
             experimentFor(new DepthFirstSearch(directional));

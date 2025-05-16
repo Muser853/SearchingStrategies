@@ -1,5 +1,5 @@
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 
 public class Cell {
@@ -13,12 +13,12 @@ public class Cell {
         {1, 5, 6, 3}, // left
         {3, 6, 5, 1}// right
     };
-    public final ArrayList<Integer> coord;
+    public final List<Integer> coord;
     public final Cell[] neighbors = new Cell[6];
     Cell prev = null; // previous cell in path
     int g = 0; // Distance from start/target node to current node
     
-    protected Cell(ArrayList<Integer> coord){
+    protected Cell(List<Integer> coord){
         this.coord = coord;
     }
     public void reset(){
@@ -28,21 +28,21 @@ public class Cell {
 
     protected static ArrayList<LinkedList<Cell>> generateCellLevels(){
         final ArrayList<LinkedList<Cell>> cellLevels = new ArrayList<>();
-        final ArrayList<Integer> origin = new ArrayList<>(Arrays.asList(0, 3, 6, 9, 12, 15, 18));
+        final List<Integer> origin = List.of (0, 3, 6, 9, 12, 15, 18);
         
-        HashMap<ArrayList<Integer>, Cell> cellMap = new HashMap<>();
+        HashMap<List<Integer>, Cell> cellMap = new HashMap<>(1<<24);
         cellMap.put(origin, new Cell(origin));
         
         LinkedList<Cell> ends = new LinkedList<>();
         ends.addFirst(cellMap.get(origin));
         do{
             cellLevels.add(new LinkedList<>(ends));
-            ArrayList<Integer> newCoord;
+            List<Integer> newCoord;
             Cell polled;
             int size = ends.size();
             for (int i = 0; i < size; i++){
                 polled = ends.remove();
-                for (int j = 0; j < 6; j++){
+                for (int j = 0; j < 4; j++){
                     newCoord = new ArrayList<>(polled.coord);
                     int[] rotation = faceRotationIndices[2 + j % 2];
                     int[] oneArray = faceRotationIndices[j];
@@ -67,10 +67,10 @@ public class Cell {
 
     public int calculateHeuristics(Boolean euclidean, Cell target){
         int sum = 0;
-        if (euclidean == null)for (int i = 0; i < coord.size(); i++){
+        if (euclidean == null) for (int i = 0; i < coord.size(); i++){
             if (! coord.get(i).equals(target.coord.get(i))) sum++;
         }
-        else if (euclidean)for (int i = 0; i < coord.size(); i++){
+        else if (euclidean) for (int i = 0; i < coord.size(); i++){
             sum += (coord.get(i) - target.coord.get(i)) * (coord.get(i) - target.coord.get(i));
         }
         else for (int i = 0; i < coord.size(); i++){

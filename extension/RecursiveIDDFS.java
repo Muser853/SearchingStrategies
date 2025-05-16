@@ -30,6 +30,9 @@ public final class RecursiveIDDFS extends AbstractSearch {
         }else stack.addLast(next);
     }
     protected void updateCell(Cell next){
+        if (Math.abs(next.g) <= currentDepth){
+            stack.addFirst(stack.remove(next));
+        }
     }
     public int numRemainingCells(){
         return stack.size();

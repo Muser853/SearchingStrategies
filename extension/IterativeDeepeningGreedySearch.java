@@ -19,7 +19,10 @@ public final class IterativeDeepeningGreedySearch extends AbstractSearch{
         else
             stack.addFirst(next);
     }
-    protected void updateCell(Cell next) {
+    protected void updateCell(Cell next){
+        if (next.calculateHeuristics(euclid, next.g < 0 ? start : target) <= currentBest){
+            stack.addFirst(stack.remove(next));
+        }
     }
     protected int numRemainingCells() {
         return stack.size();
